@@ -62,7 +62,7 @@ Login.propTypes = {
 const mapStateToProps = (state, props) => {
   return {
     authenticated: !isNil(state.authentication.user),
-    redirect: props.location.query.redirect || '/peaks',
+    redirect: props.location.query.redirect || '/races',
   };
 };
 

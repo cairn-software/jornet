@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 `;
 
 const Layout = ({children, mask}) => {
+  console.log(mask);
   return (
     <App>
       <MuiThemeProvider>
