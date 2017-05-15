@@ -1,7 +1,8 @@
--- strava_user
-DROP TABLE IF EXISTS strava_user CASCADE;
-CREATE TABLE strava_user (
-  id BIGINT PRIMARY KEY,
+-- jornet_user table
+DROP TABLE IF EXISTS jornet_user CASCADE;
+CREATE TABLE jornet_user (
+  id BIGSERIAL PRIMARY KEY,
+  strava_id BIGINT NOT NULL,
   email_address TEXT NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
@@ -10,13 +11,8 @@ CREATE TABLE strava_user (
   country TEXT NOT NULL,
   sex TEXT NOT NULL,
   photo TEXT,
-  bearer_token TEXT NOT NULL
-);
-
--- jornet_user table
-DROP TABLE IF EXISTS jornet_user CASCADE;
-CREATE TABLE jornet_user (
-  id BIGSERIAL PRIMARY KEY,
-  strava_id BIGINT NOT NULL REFERENCES strava_user (id) ON DELETE CASCADE,
+  bearer_token TEXT NOT NULL,
   last_login TIMESTAMP NOT NULL DEFAULT now()
 );
+
+CREATE UNIQUE INDEX strava_id_idx ON jornet_user(strava_id);
