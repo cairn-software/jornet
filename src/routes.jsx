@@ -14,10 +14,7 @@ import NotFound from 'pages/NotFound';
 // Redirects to /login by default
 const UserIsAuthenticated = UserAuthWrapper({
   authSelector: state => state.authentication.user,
-  redirectAction: newLoc =>
-    dispatch => {
-      dispatch(routerActions.replace(newLoc));
-    },
+  redirectAction: newLoc => dispatch => dispatch(routerActions.replace(newLoc)),
 });
 
 export default (

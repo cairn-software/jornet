@@ -20,11 +20,10 @@ const ProfilePic = styled.img`
 `;
 
 const Settings = ({logout, router, user}) => {
-  const {athlete} = user.strava;
   return (
     <div>
       <FlexContainer>
-        <ProfilePic src={`${athlete.profile_medium}`} />
+        <ProfilePic src={`${user.photo}`} />
         <IconMenu iconButtonElement={<IconButton value="arrow_r"><MoreVertIcon /></IconButton>}>
           <MenuItem primaryText="Profile" onClick={() => router.push('/profile')} />
           <MenuItem primaryText="Sign out" onClick={logout} />

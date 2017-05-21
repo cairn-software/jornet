@@ -17,13 +17,11 @@ const SECRET = fs.readFileSync('private.key');
  * @return {object} The newly created user and session token
  */
 const createUserAndToken = stravaUser => {
-  return upsert(stravaUser)
-    .then(jornetUser => {
-      logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
-      const user = {strava: {...stravaUser, access_token: null}, ...jornetUser};
-      const jwtToken = jwt.sign({user}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
-      return {...user, token: jwtToken};
-    });
+  return upsert(stravaUser).then(jornetUser => {
+    logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
+    const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
+    return {...jornetUser, token: jwtToken};
+  });
 };
 
 /**

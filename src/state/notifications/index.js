@@ -1,6 +1,6 @@
 import {NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
 
-const initialState = {mask: {}};
+const initialState = {mask: null};
 const reducer = (state = initialState, {type, payload}) => {
   switch (type) {
     case NOTIFICATIONS_MASK:

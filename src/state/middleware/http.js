@@ -59,7 +59,7 @@ const httpMiddleware = store => next => action => {
     store.dispatch(createActionOfUnkownType(requestType, {payload: httpCall.payload}));
   }
 
-  const parseJSON = response => response.text().then(text => text ? JSON.parse(text) : {});
+  const parseJSON = response => response.text().then(text => (text ? JSON.parse(text) : {}));
 
   return fetch(endpoint, {method: method, headers: headers, body: body})
     .then(response => {

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 import styled from 'styled-components';
 
-import {grey400, orange500} from 'material-ui/styles/colors';
+import {primary, primary1} from 'variables';
 
 const MaskWrapper = styled.div`
   position: absolute;;
@@ -10,7 +10,7 @@ const MaskWrapper = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: ${grey400} .4;
+  background-color: ${primary1} !important;
   color: white;
   display: flex;
   font-size: 3rem;
@@ -22,11 +22,11 @@ const MaskWrapper = styled.div`
 `;
 
 const MessageWrapper = styled.div`
-  color: ${orange500};
+  color: ${primary};
 `;
 
 const Progress = styled(CircularProgress)`
-  color: ${orange500};
+  color: ${primary};
 `;
 
 const Mask = ({message}) => {
@@ -34,7 +34,7 @@ const Mask = ({message}) => {
     <MaskWrapper>
       <MessageWrapper>
         <h5>{message}</h5>
-        <Progress size={50} thickness={5} />
+        <Progress size={100} thickness={5} />
       </MessageWrapper>
     </MaskWrapper>
   );

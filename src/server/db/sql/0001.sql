@@ -12,7 +12,8 @@ CREATE TABLE jornet_user (
   sex TEXT NOT NULL,
   photo TEXT,
   bearer_token TEXT NOT NULL,
-  last_login TIMESTAMP NOT NULL DEFAULT now()
+  last_login TIMESTAMP NOT NULL DEFAULT now(),
+  is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE UNIQUE INDEX strava_id_idx ON jornet_user(strava_id);

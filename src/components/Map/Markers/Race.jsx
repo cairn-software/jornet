@@ -1,0 +1,37 @@
+import React, {Component, PropTypes} from 'react';
+import FontIcon from 'material-ui/FontIcon';
+import {primary, primary3} from 'variables';
+import styled from 'styled-components';
+
+import {iconFromType} from 'util/tools';
+
+const RaceName = styled.h5`
+  color: ${primary3};
+  font-size: 1rem;
+`;
+
+const RaceIcon = styled(FontIcon)`
+  color: ${props => (props['data-hover'] ? primary3 : primary)} !important;
+  cursor: pointer;
+`;
+
+class Race extends Component {
+  render() {
+    const {name, type, $hover} = this.props;
+    return (
+      <div>
+        <RaceIcon className="material-icons" data-hover={$hover}>
+          {iconFromType(type)}
+        </RaceIcon>
+        {$hover && <RaceName>{name}</RaceName>}
+      </div>
+    );
+  }
+}
+Race.propTypes = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  $hover: PropTypes.bool, // comes from Google Maps
+};
+
+export default Race;

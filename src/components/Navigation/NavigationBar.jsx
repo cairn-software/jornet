@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import {withRouter} from 'react-router';
 
 import Settings from 'components/Navigation/Settings';
-import {orange500} from 'material-ui/styles/colors';
+import {primary3} from 'variables';
 
 const Bar = styled(AppBar)`
-  background-color: ${orange500} !important;
+  background-color: ${primary3} !important;
 `;
 
 /**
