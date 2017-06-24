@@ -17,7 +17,8 @@
     "copy-assets": "cp -R src/assets dist",
     "clean-and-copy": "npm run clean-dist && npm run copy-index && npm run copy-assets",
     "lint": "./bin/lint.sh js && ./bin/lint.sh jsx",
-    "prettify": "bin/prettify.sh"
+    "prettify": "bin/prettify.sh",
+    "dbdeploy": "babel-node src/server/db/bin/db-deploy.js"
   },
   "repository": {
     "type": "git",
