@@ -20,13 +20,22 @@ If you don't have `node` and `npm` installed, do [that](https://docs.npmjs.com/g
 $ npm install
 ```
 
-Next, if you don't already have postgres installed locally, you will need to do that.  Once you have postgres up and running, create a new database for jornet to use.  Lastly, create a new user in postgres and grant all privileges on your database to this user.  To point the jornet app at this postgres instance, set the following environment variables based on how your above setup.
+Next, if you don't already have postgres installed locally, you will need to do that.  Once you have postgres up and running, do the following:
+
+```bash
+$ psql postgres
+=# create user jornet with password 'jornetdb';
+=# create database jornet;
+=# grant all privileges on database jornet to jornet;
+```
+
+To point the `jornet` app at this postgres instance, set the following environment variables:
 
 ```bash
 export JORNET_DB_HOST=localhost
 export JORNET_DB_PORT=5432
-export JORNET_DB_USER=
-export JORNET_DB_PASSWORD=
+export JORNET_DB_USER=jornet
+export JORNET_DB_PASSWORD=jornetdb
 ```
 
 ## Configuration
