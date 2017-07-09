@@ -3,9 +3,6 @@
 BASE_DIR=$1
 APP_SERVER=$JORNET_APP_SERVER
 
-# stop all running jornet processes
-# ssh jornet@$APP_SERVER 'bash -s' < bin/stop-all.sh
-
 # scp all necessary artifacts
 rsync -r $BASE_DIR/bin jornet@$APP_SERVER:/home/jornet/workspace/jornet
 scp -r $BASE_DIR/dist jornet@$APP_SERVER:/home/jornet/workspace/jornet
