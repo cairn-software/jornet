@@ -5,6 +5,3 @@ cd /home/jornet/workspace/jornet
 
 ## make sure dependencies are up-to-date
 npm i
-
-# fire 'er up'
-npm run start:prod
