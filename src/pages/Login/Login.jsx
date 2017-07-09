@@ -41,6 +41,7 @@ class Login extends Component {
   render() {
     const onConnect = e => {
       e.preventDefault();
+      console.log(properties);
       window.location = `https://www.strava.com/oauth/authorize?client_id=${properties.stravaClientId}&response_type=code&state=hideMe&approvalPrompt=force&redirect_uri=${properties.redirectUri}`;
     };
 

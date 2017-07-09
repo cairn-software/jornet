@@ -11,9 +11,3 @@ dependencies:
 test:
   override:
     - npm test && npm run coveralls
-
-deployment:
-  production:
-    branch: master
-    commands:
-      - ./bin/deploy.sh ${PWD}
