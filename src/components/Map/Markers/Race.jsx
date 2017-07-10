@@ -17,10 +17,10 @@ const RaceIcon = styled(FontIcon)`
 
 class Race extends Component {
   render() {
-    const {name, type, $hover} = this.props;
+    const {name, onClick, type, $hover} = this.props;
     return (
       <div>
-        <RaceIcon className="material-icons" data-hover={$hover}>
+        <RaceIcon className="material-icons" data-hover={$hover} onClick={onClick}>
           {iconFromType(type)}
         </RaceIcon>
         {$hover && <RaceName>{name}</RaceName>}
@@ -30,6 +30,7 @@ class Race extends Component {
 }
 Race.propTypes = {
   name: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   $hover: PropTypes.bool, // comes from Google Maps
 };
