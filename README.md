@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 
 [![version](http://img.shields.io/badge/version-v0.0.1-blue.svg)](#) [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/) [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
-[![Circle CI](https://circleci.com/gh/jjwyse/jornet.svg?style=shield)](https://circleci.com/gh/jjwyse/jornet)
+[![Circle CI](https://circleci.com/gh/cairn-software/jornet.svg?style=shield)](https://circleci.com/gh/cairn-software/jornet)
 [![Coverage Status](https://coveralls.io/repos/github/jjwyse/jornet/badge.svg)](https://coveralls.io/github/jjwyse/jornet)
 
 
