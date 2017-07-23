@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import {isNil} from 'ramda';
 
-import {upsert} from './db/user';
+import {upsert as upsertUser} from './db/user';
+import {load as loadRaces} from './db/race';
 import logger from './logger';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
@@ -17,7 +18,7 @@ const SECRET = fs.readFileSync('private.key');
  * @return {object} The newly created user and session token
  */
 const createUserAndToken = stravaUser => {
-  return upsert(stravaUser).then(jornetUser => {
+  return upsertUser(stravaUser).then(jornetUser => {
     logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
     const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
     return {...jornetUser, token: jwtToken};
@@ -99,13 +100,15 @@ const authMiddleware = (req, res, next) => {
   return jwt.verify(token, SECRET, onJwtDecoded);
 };
 
+const retrieveRaces = (req, res) => loadRaces().then(races => res.json(races));
+
 /**
  * Top level function that defines what functions will handle what API requests
  * @param {object} expressApp The express app to add any API definitions to
  */
 const init = expressApp => {
   expressApp.use(bodyParser.json());
-  expressApp.get('/api/races', authMiddleware, () => ({todo: true}));
+  expressApp.get('/api/races', authMiddleware, retrieveRaces);
   expressApp.post('/api/oauth', authenticate);
 };
 

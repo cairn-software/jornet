@@ -8,24 +8,18 @@ const StyledDrawer = styled(Drawer)`
   z-index: 1000 !important;
 `;
 
-const RaceDrawer = ({isOpen, onClose, raceId}) => {
-  const findRaceName = () => {
-    switch (raceId) {
-      case 1:
-        return 'Colfax Marathon';
-      case 2:
-        return 'Leadville 100';
-      case 3:
-        return 'Hardrock 100';
-      default:
-        return '';
-    }
-  };
+const RaceDrawer = ({isOpen, onClose, race}) => {
   return (
     <StyledDrawer width={400} openSecondary={true} open={isOpen}>
-      <h1>{findRaceName()}</h1>
+      <h1>{race.name}</h1>
       <br />
-      <h4>Date: 5/12/17</h4>
+      <ul>
+        <li><b>Type: </b>{race.type}</li>
+        <li><b>Location: </b>{race.location}</li>
+        <li><b>Distance (miles): </b>{race.distance}</li>
+        <li><b>Website: </b>{race.website}</li>
+        <li><b>Start Date: </b>{race.start_date}</li>
+      </ul>
       <RaisedButton label="Close" secondary={true} onClick={onClose} />
     </StyledDrawer>
   );
@@ -33,7 +27,10 @@ const RaceDrawer = ({isOpen, onClose, raceId}) => {
 RaceDrawer.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  raceId: PropTypes.number,
+  race: PropTypes.object.isRequired,
+};
+RaceDrawer.defaultProps = {
+  race: {},
 };
 
 export default RaceDrawer;

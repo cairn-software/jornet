@@ -6,6 +6,7 @@
  * https://github.com/agraboso/redux-api-middleware
  */
 import fetch from 'isomorphic-fetch';
+import {LOGIN_EXPIRED} from 'state/authentication';
 import {isNil, merge, pipe, reject} from 'ramda';
 import {stringify} from 'querystring';
 import {CALL_API, NOTIFICATIONS_ALERT, NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
@@ -64,7 +65,12 @@ const httpMiddleware = store => next => action => {
   return fetch(endpoint, {method: method, headers: headers, body: body})
     .then(response => {
       return parseJSON(response).then(data => {
-        if (!response.ok) return Promise.reject(data);
+        if (!response.ok) {
+          if (response.status === 401) {
+            store.dispatch({type: LOGIN_EXPIRED, payload: {message: 'Session expired...'}});
+          }
+          return Promise.reject(data);
+        }
         return data;
       });
     })

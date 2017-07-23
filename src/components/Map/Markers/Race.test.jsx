@@ -10,7 +10,7 @@ describe('Race', () => {
   it('should not show the name by default', () => {
     const component = mount(
       <MuiThemeProvider>
-        <Race name="Foo" />
+        <Race name="Hardrock 100" type="Trail Run" onClick={() => true} />
       </MuiThemeProvider>,
     );
 
@@ -21,7 +21,7 @@ describe('Race', () => {
   it('should show the name on hover', () => {
     const component = mount(
       <MuiThemeProvider>
-        <Race $hover={true} name="Foo" />
+        <Race $hover={true} name="Hardrock 100" type="Trail Run" onClick={() => true} />
       </MuiThemeProvider>,
     );
 

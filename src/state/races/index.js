@@ -1,11 +1,23 @@
-const initialState = {mask: {}};
-const reducer = (state = initialState, {type}) => {
+import {CALL_API} from 'state/types';
+
+export const LOAD_RACES = 'RACES:LOAD_RACES';
+
+const initialState = {loaded: false, all: []};
+const reducer = (state = initialState, {payload, type}) => {
   switch (type) {
+    case LOAD_RACES:
+      return Object.assign({}, state, {loaded: true, all: payload});
     default:
       return state;
   }
 };
 
-const loadAllRaces = () => [{id: 123, name: 'Hardrock'}];
+const loadRaces = () => ({
+  [CALL_API]: {
+    method: 'GET',
+    endpoint: '/races',
+    types: [LOAD_RACES],
+  },
+});
 
-export {reducer, loadAllRaces};
+export {reducer, loadRaces};

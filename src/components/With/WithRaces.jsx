@@ -1,20 +1,20 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
-import {loadAllRaces} from 'state/races';
+import {loadRaces} from 'state/races';
 
 const WithRaces = WrappedComponent => {
   class WithRacesClass extends React.Component {
     static propTypes = {
       isRacesLoaded: PropTypes.bool,
-      loadRaces: PropTypes.func.isRequired,
+      load: PropTypes.func.isRequired,
       races: PropTypes.array,
     };
 
     componentDidMount() {
-      const {isRacesLoaded, loadRaces} = this.props;
+      const {isRacesLoaded, load} = this.props;
       if (!isRacesLoaded) {
-        loadRaces();
+        load();
       }
     }
 
@@ -32,7 +32,9 @@ const WithRaces = WrappedComponent => {
   };
 
   const mapDispatchToProps = dispatch => {
-    return {loadRaces: () => dispatch(loadAllRaces())};
+    return {
+      load: () => dispatch(loadRaces()),
+    };
   };
   return connect(mapStateToProps, mapDispatchToProps)(WithRacesClass);
 };
