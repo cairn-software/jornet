@@ -14,9 +14,12 @@ const metersToFeet = m => Math.round(m * FEET_PER_METER * 100) / 100;
  */
 const iconFromType = type => {
   switch (type) {
-    case 'run':
+    case 'Trail Run':
+    case 'Road Run':
       return 'directions_run';
-    case 'bike':
+    case 'Road Bike':
+    case 'Mtn Bike':
+    case 'CycloCross Bike':
       return 'directions_bike';
     default:
       return 'whatshot';

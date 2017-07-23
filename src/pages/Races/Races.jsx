@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import styled from 'styled-components';
 import {isNil} from 'ramda';
 
+import WithRaces from 'components/With/WithRaces';
 import Map from 'components/Map/Map';
 import Race from 'components/Map/Markers/Race';
 import RaceDrawer from 'components/Drawer/RaceDrawer';
@@ -21,26 +22,41 @@ class Races extends Component {
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
-  toggleDrawer(raceId) {
-    this.setState({selectedRace: raceId});
+  toggleDrawer(race) {
+    this.setState({selectedRace: race});
   }
 
   render() {
+    const {races} = this.props;
+    const RaceMarkers = races.map(race => {
+      return (
+        <Race
+          key={race.id}
+          type={race.type}
+          name={race.name}
+          onClick={() => this.toggleDrawer(race)}
+          lat={race.latitude}
+          lng={race.longitude}
+        />
+      );
+    });
+
     return (
       <Wrapper>
         <Map>
-          <Race type="run" name="Colfax Marathon" onClick={() => this.toggleDrawer(1)} lat={39.7392} lng={-104.9903} />
-          <Race type="run" name="Leadville 100" onClick={() => this.toggleDrawer(2)} lat={39.2058} lng={-106.2925} />
-          <Race type="run" name="Hardrock 100" onClick={() => this.toggleDrawer(3)} lat={37.8119} lng={-107.6645} />
+          {RaceMarkers}
         </Map>
         <RaceDrawer
           isOpen={!isNil(this.state.selectedRace)}
-          raceId={this.state.selectedRace}
+          race={isNil(this.state.selectedRace) ? {} : this.state.selectedRace}
           onClose={() => this.toggleDrawer(null)}
         />
       </Wrapper>
     );
   }
 }
+Races.propTypes = {
+  races: PropTypes.array.isRequired,
+};
 
-export default Races;
+export default WithRaces(Races);

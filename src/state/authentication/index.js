@@ -4,6 +4,7 @@ import {CALL_API} from 'state/types';
 /* Constants */
 export const LOGGED_IN = 'AUTHENTICATION:LOGGED_IN';
 export const LOGGED_OUT = 'AUTHENTICATION:LOGGED_OUT';
+export const LOGIN_EXPIRED = 'AUTHENTICATION:LOGIN_EXPIRED';
 
 /* Actions */
 const oauthLogin = (state, code) => ({
@@ -27,6 +28,9 @@ const reducer = (state = initialState, {type, payload}) => {
       save(payload);
       return Object.assign({}, state, {user: payload});
     case LOGGED_OUT:
+      invalidate();
+      return {user: null};
+    case LOGIN_EXPIRED:
       invalidate();
       return {user: null};
     default:
