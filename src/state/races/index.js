@@ -1,6 +1,6 @@
 import {CALL_API} from 'state/types';
 
-const LOAD_RACES = 'RACES:LOAD_RACES';
+export const LOAD_RACES = 'RACES:LOAD_RACES';
 
 const initialState = {loaded: false, all: []};
 const reducer = (state = initialState, {payload, type}) => {
