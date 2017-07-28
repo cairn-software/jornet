@@ -7,7 +7,8 @@ import {iconFromType} from 'util/tools';
 
 const RaceName = styled.h5`
   color: ${primary3};
-  font-size: 1rem;
+  margin: 0px 0px 0px -50px;
+  min-width: 200px;
 `;
 
 const RaceIcon = styled(FontIcon)`
