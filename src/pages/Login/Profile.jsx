@@ -3,10 +3,6 @@ import TextField from 'material-ui/TextField';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 
-// Needed for onTouchTap
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
 const Wrapper = styled.div`
   margin: 20px;
   text-align: center;
