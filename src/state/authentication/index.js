@@ -28,8 +28,6 @@ const reducer = (state = initialState, {type, payload}) => {
       save(payload);
       return Object.assign({}, state, {user: payload});
     case LOGGED_OUT:
-      invalidate();
-      return {user: null};
     case LOGIN_EXPIRED:
       invalidate();
       return {user: null};

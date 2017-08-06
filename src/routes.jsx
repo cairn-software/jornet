@@ -4,6 +4,7 @@ import {UserAuthWrapper} from 'redux-auth-wrapper';
 import {routerActions} from 'react-router-redux';
 
 import Login from 'pages/Login/Login';
+import Profile from 'pages/Login/Profile';
 
 import Races from 'pages/Races/Races';
 
@@ -24,6 +25,7 @@ export default (
     // All routes below require authentication
     <Route component={UserIsAuthenticated(LoggedInTemplate)}>
       <IndexRoute component={Races} />
+      <Route path="/profile" component={Profile} />
       <Route path="/races" component={Races} />
     </Route>
 
