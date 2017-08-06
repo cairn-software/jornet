@@ -16,7 +16,7 @@ injectGlobal`
   }
   body {
     margin: 0;
-    font-family: "Open Sans", "Helvetica Neue", "Arial", "Helvetica", "Montserrat", sans-serif;
+    font-family: "Montserrat", "Open Sans", "Helvetica Neue", "Arial", "Helvetica", sans-serif;
     font-weight: 400;
     font-size: 100%;
     line-height: 1.25rem;
@@ -25,7 +25,7 @@ injectGlobal`
     font-size-adjust: 0.5;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", "Helvetica Neue", "Arial", "Helvetica", "Montserrat", sans-serif;
+    font-family: "Montserrat", "Ubuntu", "Helvetica Neue", "Arial", "Helvetica", sans-serif;
     font-weight: 700;
     margin: 1rem 0;
   }
