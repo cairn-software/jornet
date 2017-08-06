@@ -54,3 +54,40 @@ export JORNET_REDIRECT_URL=http://localhost:7347/login
 # Fire that bad boy up:
 $ npm start
 ```
+
+## Deploying
+Make sure the following environment variables are set to the proper production values:
+```bash
+export JORNET_DB_HOST=
+export JORNET_DB_PORT=
+export JORNET_DB_USER=
+export JORNET_DB_PASSWORD=
+export JORNET_REDIRECT_URL=
+```
+
+Build the production artifacts:
+```bash
+npm run build:prod
+```
+> Make sure to run this from the same terminal window where you set the above environment variables
+
+Run `dbdeploy` against the prod database:
+```bash
+npm run dbdeploy
+```
+> Make sure to run this from the same terminal window where you set the above environment variables
+
+Stop the prod app server by `ssh`'ing to it and running the stop command:
+```bash
+npm run stop:prod
+```
+
+Run the deploy script to deploy the latest artifacts that were just built:
+```bash
+./bin/deploy.sh /path/to/jornet
+```
+
+Start the prod app server node process by `ssh`'ing to it and running the start command:
+```bash
+npm run start:prod
+```
