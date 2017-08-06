@@ -2,7 +2,9 @@ import React, {PropTypes} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import styled from 'styled-components';
 import Drawer from 'material-ui/Drawer';
-import {primary} from 'variables';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import {primary, primary3} from 'variables';
 
 const StyledDrawer = styled(Drawer)`
   z-index: 1000 !important;
@@ -15,11 +17,12 @@ const Heading = styled.h1`
 
 const Details = styled.ul`
   list-style: none;
+  margin-left: 25px;
+  padding: 0;
 `;
 
 const DataPoint = styled.li`
   font-style: bold;
-  padding: 2px;
 `;
 
 const Buttons = styled.div`
@@ -32,15 +35,23 @@ const CloseButton = styled(RaisedButton)`
   background-color: ${primary};
 `;
 
+const RaceHref = styled(FontIcon)`
+  color: ${primary3} !important;
+`;
+
 const RaceDrawer = ({isOpen, onClose, race}) => {
   return (
     <StyledDrawer width={400} openSecondary={true} open={isOpen}>
-      <Heading>{race.name}</Heading>
+      <Heading>
+        {race.name}
+        <IconButton target="_blank" href={race.website}>
+          <RaceHref className="material-icons"> open_in_new </RaceHref>
+        </IconButton>
+      </Heading>
       <Details>
         <DataPoint>{race.type}</DataPoint>
         <DataPoint>{race.location}</DataPoint>
         <DataPoint>{race.distance} (miles)</DataPoint>
-        <DataPoint><a target="_blank" href={race.website}>Race Website</a></DataPoint>
         <DataPoint>{race.start_date}</DataPoint>
       </Details>
       <Buttons>
