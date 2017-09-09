@@ -12,6 +12,8 @@ import Layout from 'components/PageTemplates/Layout';
 import LoggedInTemplate from 'components/PageTemplates/LoggedInTemplate';
 import NotFound from 'pages/NotFound';
 
+import ManageRaces from 'pages/admin/ManageRaces';
+
 // Redirects to /login by default
 const UserIsAuthenticated = UserAuthWrapper({
   authSelector: state => state.authentication.user,
@@ -27,6 +29,8 @@ export default (
       <IndexRoute component={Races} />
       <Route path="/profile" component={Profile} />
       <Route path="/races" component={Races} />
+
+      <Route path='/admin/races' component={ManageRaces} />
     </Route>
 
     <Route path="*" component={NotFound} />

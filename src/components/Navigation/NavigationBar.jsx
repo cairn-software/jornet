@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import {withRouter} from 'react-router';
 
 import Settings from 'components/Navigation/Settings';
-import {primary3} from 'variables';
+import {primary} from 'variables';
 
 const Bar = styled(AppBar)`
-  background-color: ${primary3} !important;
+  background-color: ${primary} !important;
 `;
 
 /**
@@ -20,7 +20,7 @@ const NavigationBar = ({router}) => {
       iconElementRight={<Settings />}
       onTitleTouchTap={() => router.push('/')}
       showMenuIconButton={false}
-      title="Cairn"
+      title=""
     />
   );
 };
