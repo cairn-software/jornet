@@ -13,7 +13,10 @@ class ManageRaces extends Component {
     };
   }
 
-  onSelectRow(selectedRowIndex) {
+  onSelectRow(selectedRowIndex, shouldClose) {
+    if (isNil(selectedRowIndex) && !shouldClose) {
+      return;
+    }
     this.setState({selectedRowIndex});
   }
 
@@ -22,7 +25,7 @@ class ManageRaces extends Component {
 
     return (
       <div>
-        <Table onRowSelection={selectedIndexes => this.onSelectRow(selectedIndexes[0])}>
+        <Table onRowSelection={selectedIndexes => this.onSelectRow(selectedIndexes[0], false)}>
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
@@ -35,7 +38,7 @@ class ManageRaces extends Component {
           </TableHeader>
           <TableBody>
             {races.map((row, index) => (
-              <TableRow key={index} onClick={() => console.log('foo')}>
+              <TableRow key={index}>
                 <TableRowColumn>{row.id}</TableRowColumn>
                 <TableRowColumn>{row.name}</TableRowColumn>
                 <TableRowColumn>{row.type}</TableRowColumn>
@@ -49,7 +52,7 @@ class ManageRaces extends Component {
         <RaceDrawer
           isOpen={!isNil(this.state.selectedRowIndex)}
           race={races[this.state.selectedRowIndex] || {}}
-          onClose={() => this.onSelectRow(null)}
+          onClose={() => this.onSelectRow(null, true)}
         />
       </div>
     );
