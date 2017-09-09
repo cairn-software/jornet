@@ -12,12 +12,27 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+  background-image: url('/assets/img/background.jpg');
+  background-size: 100% 100%;
+`;
+
+const Body = styled.div`
+  background-color: rgb(237, 237, 237);
+  padding: 30px;
+  border-radius: 5px;
+  text-align: center;
+`;
+
+const Heading = styled.h1`
+  padding: 2px;
+  font-size: 4rem;
 `;
 
 const StravaButton = styled.img`
   flex: 1 1 auto;
   cursor: pointer
-  min-width: 500px;
+  border-radius: 5%;
+  padding-top: 20px;
 `;
 
 class Login extends Component {
@@ -46,7 +61,13 @@ class Login extends Component {
 
     return (
       <Container>
-        <StravaButton src="/assets/img/strava-connect-light.svg" onClick={onConnect} />
+        <Body>
+          <div>
+            <Heading>Cairn</Heading>
+            <i>Suffer smarter.</i>
+          </div>
+          <StravaButton src="/assets/img/strava-connect-orange.svg" onClick={onConnect} />
+        </Body>
       </Container>
     );
   }
