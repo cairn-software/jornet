@@ -30,7 +30,7 @@ export default (
       <Route path="/profile" component={Profile} />
       <Route path="/races" component={Races} />
 
-      <Route path='/admin/races' component={ManageRaces} />
+      <Route path="/admin/races" component={ManageRaces} />
     </Route>
 
     <Route path="*" component={NotFound} />

@@ -40,6 +40,8 @@ const RaceHref = styled(FontIcon)`
 `;
 
 const RaceDrawer = ({isOpen, onClose, race}) => {
+  console.log(race);
+
   return (
     <StyledDrawer width={400} openSecondary={true} open={isOpen}>
       <Heading>

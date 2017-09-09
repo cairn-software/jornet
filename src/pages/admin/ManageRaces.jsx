@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-
+import RaceDrawer from 'components/Drawer/RaceDrawer';
 import WithRaces from 'components/With/WithRaces';
+import {isNil} from 'ramda';
 
 class ManageRaces extends Component {
   constructor(props) {
@@ -18,32 +19,39 @@ class ManageRaces extends Component {
 
   render() {
     const {races} = this.props;
-    console.log(this.state.selectedRowIndex);
+
     return (
-      <Table onRowSelection={selectedIndexes => this.onSelectRow(selectedIndexes[0])}>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Type</TableHeaderColumn>
-            <TableHeaderColumn>Distance</TableHeaderColumn>
-            <TableHeaderColumn>Date</TableHeaderColumn>
-            <TableHeaderColumn>Website</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {races.map((row, index) => (
-            <TableRow key={index} onClick={() => console.log('foo')}>
-              <TableRowColumn>{row.id}</TableRowColumn>
-              <TableRowColumn>{row.name}</TableRowColumn>
-              <TableRowColumn>{row.type}</TableRowColumn>
-              <TableRowColumn>{row.distance}</TableRowColumn>
-              <TableRowColumn>{row.start_date}</TableRowColumn>
-              <TableRowColumn>{row.website}</TableRowColumn>
+      <div>
+        <Table onRowSelection={selectedIndexes => this.onSelectRow(selectedIndexes[0])}>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>ID</TableHeaderColumn>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Type</TableHeaderColumn>
+              <TableHeaderColumn>Distance</TableHeaderColumn>
+              <TableHeaderColumn>Date</TableHeaderColumn>
+              <TableHeaderColumn>Website</TableHeaderColumn>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {races.map((row, index) => (
+              <TableRow key={index} onClick={() => console.log('foo')}>
+                <TableRowColumn>{row.id}</TableRowColumn>
+                <TableRowColumn>{row.name}</TableRowColumn>
+                <TableRowColumn>{row.type}</TableRowColumn>
+                <TableRowColumn>{row.distance}</TableRowColumn>
+                <TableRowColumn>{row.start_date}</TableRowColumn>
+                <TableRowColumn>{row.website}</TableRowColumn>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <RaceDrawer
+          isOpen={!isNil(this.state.selectedRowIndex)}
+          race={races[this.state.selectedRowIndex] || {}}
+          onClose={() => this.onSelectRow(null)}
+        />
+      </div>
     );
   }
 }
