@@ -16,12 +16,7 @@ const Bar = styled(AppBar)`
  */
 const NavigationBar = ({router}) => {
   return (
-    <Bar
-      iconElementRight={<Settings />}
-      onTitleTouchTap={() => router.push('/')}
-      showMenuIconButton={false}
-      title=""
-    />
+    <Bar iconElementRight={<Settings />} onTitleTouchTap={() => router.push('/')} showMenuIconButton={false} title="" />
   );
 };
 NavigationBar.propTypes = {

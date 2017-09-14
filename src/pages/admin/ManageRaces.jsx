@@ -1,8 +1,20 @@
 import React, {Component, PropTypes} from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import FontIcon from 'material-ui/FontIcon';
 import RaceDrawer from 'components/Drawer/RaceDrawer';
 import WithRaces from 'components/With/WithRaces';
 import {isNil} from 'ramda';
+import styled from 'styled-components';
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+`;
+
+const CreateRaceButton = styled(FontIcon)`
+  cursor: pointer;
+`;
 
 class ManageRaces extends Component {
   constructor(props) {
@@ -49,6 +61,9 @@ class ManageRaces extends Component {
             ))}
           </TableBody>
         </Table>
+        <ButtonWrapper>
+          <CreateRaceButton className="material-icons" onClick={() => this.onSelectRow(-1)}> create </CreateRaceButton>
+        </ButtonWrapper>
         <RaceDrawer
           isOpen={!isNil(this.state.selectedRowIndex)}
           race={races[this.state.selectedRowIndex] || {}}

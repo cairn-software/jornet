@@ -1,7 +1,17 @@
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {reduxForm, Field} from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 import styled from 'styled-components';
+import {createRace, updateRace} from 'state/races';
 import {primary} from 'variables';
+
+const Form = styled.form`
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+`;
 
 const Buttons = styled.div`
   display: flex;
@@ -14,51 +24,46 @@ const CancelButton = styled(RaisedButton)`
 `;
 
 class RaceForm extends Component {
-  constructor(props) {
-    super(props);
-
-    console.log(props.race);
-    this.state = {
-      ...props.race,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(key, event) {
-    console.log(event.target);
-    this.setState({[key]: event.target.value});
-  }
-
-  handleSubmit(event) {
-    console.log(`A name was submitted: ${this.state.name}`);
-    event.preventDefault();
-  }
-
   render() {
-    const {onCancel} = this.props;
+    const {create, handleSubmit, onCancel, update} = this.props;
+
+    const onSubmit = values => {
+      return values.id ? update(values.id, values) : create(values);
+    };
 
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" value={this.state.name} onChange={e => this.handleChange('name', e)} />
-        </label>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Field component="input" name="name" placeholder="Name" type="text" />
+        <Field component="input" name="type" placeholder="Type" type="text" />
+        <Field component="input" name="website" placeholder="Website" type="text" />
+        <Field component="input" name="distance" placeholder="Distance" type="text" />
+        <Field component="input" name="location" placeholder="Location" type="text" />
+        <Field component="input" name="latitude" placeholder="Latitude" type="text" />
+        <Field component="input" name="longitude" placeholder="Longitude" type="text" />
+        <Field component="input" name="start_date" placeholder="Race Date" type="text" />
         <Buttons>
           <CancelButton label="Cancel" backgroundColor={primary} onClick={onCancel} />
           <RaisedButton label="Submit" type="submit" />
         </Buttons>
-      </form>
+      </Form>
     );
   }
 }
 RaceForm.propTypes = {
+  create: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
-  race: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
   onCancel: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
 };
 RaceForm.defaultProps = {
   disabled: true,
 };
 
-export default RaceForm;
+const mapDispatchToProps = dispatch => ({
+  create: race => dispatch(createRace(race)),
+  update: (id, race) => dispatch(updateRace(id, race)),
+});
+
+export default connect(null, mapDispatchToProps)(reduxForm({form: 'RaceForm', enableReinitialize: true})(RaceForm));

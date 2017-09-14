@@ -28,7 +28,7 @@ const RaceDrawer = ({isOpen, onClose, race}) => {
           <RaceHref className="material-icons"> open_in_new </RaceHref>
         </IconButton>
       </Heading>
-      <RaceForm onCancel={onClose} race={race} />
+      <RaceForm onCancel={onClose} initialValues={race} />
     </StyledDrawer>
   );
 };

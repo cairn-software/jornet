@@ -12,7 +12,7 @@ import Layout from 'components/PageTemplates/Layout';
 import LoggedInTemplate from 'components/PageTemplates/LoggedInTemplate';
 import NotFound from 'pages/NotFound';
 
-import ManageRaces from 'pages/admin/ManageRaces';
+import ManageRaces from 'pages/Admin/ManageRaces';
 
 // Redirects to /login by default
 const UserIsAuthenticated = UserAuthWrapper({

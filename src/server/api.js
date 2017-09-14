@@ -5,7 +5,7 @@ import fs from 'fs';
 import {isNil} from 'ramda';
 
 import {upsert as upsertUser} from './db/user';
-import {load as loadRaces} from './db/race';
+import {create as createRace, load as loadRaces, update as updateRace} from './db/race';
 import logger from './logger';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
@@ -76,7 +76,7 @@ const authenticate = (req, res) => {
  * @param {object} res The express response object
  * @param {Function} next Next function
  */
-const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next, isAdminRequired=false) => {
   // check if the user is authenticated and, if so, attach user to the request
   const bearer = req.headers.authorization;
   if (isNil(bearer)) {
@@ -91,7 +91,14 @@ const authMiddleware = (req, res, next) => {
       return res.json({error: 'Bearer token has expired'});
     }
 
-    req.user = decodedJwt.user;
+    // validate admin privileges
+    if (isAdminRequired && !decodedJwt.jornetUser.is_admin) {
+      logger.error(`${decodedJwt.jornetUser.email_address} is not an admin but is trying to execute ${req.url}`);
+      res.status(403);
+      return res.json({error: 'Admin prilileges required to execute this API'});
+    }
+
+    req.user = decodedJwt.jornetUser;
     return next();
   };
 
@@ -100,7 +107,19 @@ const authMiddleware = (req, res, next) => {
   return jwt.verify(token, SECRET, onJwtDecoded);
 };
 
-const retrieveRaces = (req, res) => loadRaces().then(races => res.json(races));
+const adminMiddleware = (req, res, next) => authMiddleware(req, res, next, true);
+
+const postRace = (req, res) => {
+  return createRace(req.body)
+    .then(race => res.json(race));
+};
+
+const getRaces = (req, res) => loadRaces().then(races => res.json(races));
+
+const putRace = (req, res) => {
+  return updateRace(req.params.id, req.body)
+    .then(race => res.json(race));
+};
 
 /**
  * Top level function that defines what functions will handle what API requests
@@ -108,8 +127,12 @@ const retrieveRaces = (req, res) => loadRaces().then(races => res.json(races));
  */
 const init = expressApp => {
   expressApp.use(bodyParser.json());
-  expressApp.get('/api/races', authMiddleware, retrieveRaces);
+  expressApp.get('/api/races', authMiddleware, getRaces);
   expressApp.post('/api/oauth', authenticate);
+
+  // requires admin privileges
+  expressApp.post('/api/races', adminMiddleware, postRace);
+  expressApp.put('/api/races/:id', adminMiddleware, putRace);
 };
 
 export default init;
