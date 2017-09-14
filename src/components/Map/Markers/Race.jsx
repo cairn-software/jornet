@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import FontIcon from 'material-ui/FontIcon';
-import {primary, primary3} from 'variables';
+import {primary2, primary3} from 'variables';
 import styled from 'styled-components';
 
 import {iconFromType} from 'util/tools';
@@ -12,7 +12,7 @@ const RaceName = styled.h5`
 `;
 
 const RaceIcon = styled(FontIcon)`
-  color: ${props => (props['data-hover'] ? primary3 : primary)} !important;
+  color: ${props => (props['data-hover'] ? primary3 : primary2)} !important;
   cursor: pointer;
 `;
 

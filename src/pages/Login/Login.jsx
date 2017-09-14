@@ -4,6 +4,7 @@ import {isNil} from 'ramda';
 import {routerActions} from 'react-router-redux';
 import styled from 'styled-components';
 
+import {primary} from 'variables';
 import {oauthLogin} from 'state/authentication';
 import properties from 'properties';
 
@@ -17,7 +18,7 @@ const Container = styled.div`
 `;
 
 const Body = styled.div`
-  background-color: rgb(237, 237, 237);
+  background-color: ${primary};
   padding: 30px;
   border-radius: 5px;
   text-align: center;

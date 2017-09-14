@@ -26,6 +26,7 @@ const Settings = ({logout, router, user}) => {
         <ProfilePic src={`${user.photo}`} />
         <IconMenu iconButtonElement={<IconButton value="arrow_r"><MoreVertIcon /></IconButton>}>
           <MenuItem primaryText="Profile" onClick={() => router.push('/profile')} />
+          {user.is_admin && <MenuItem primaryText="Manage Races" onClick={() => router.push('/admin/races')} />}
           <MenuItem primaryText="Sign out" onClick={logout} />
         </IconMenu>
       </FlexContainer>

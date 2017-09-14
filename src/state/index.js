@@ -6,6 +6,7 @@ import thunkMiddleware from 'redux-thunk';
 import {createStore, applyMiddleware, combineReducers, compose} from 'redux';
 import {browserHistory} from 'react-router';
 import {routerReducer as routing, routerMiddleware} from 'react-router-redux';
+import {reducer as form} from 'redux-form';
 
 import httpMiddleware from 'state/middleware/http';
 import {reducer as authentication} from 'state/authentication';
@@ -14,6 +15,7 @@ import {reducer as races} from 'state/races';
 
 export const rootReducer = combineReducers({
   authentication,
+  form,
   notifications,
   races,
   routing,

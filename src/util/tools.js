@@ -1,3 +1,5 @@
+import {isNil} from 'ramda';
+
 const FEET_PER_METER = 3.28084;
 
 /**
@@ -26,4 +28,28 @@ const iconFromType = type => {
   }
 };
 
-export {iconFromType, metersToFeet};
+const sortByField = (a, b, field) => {
+  let aField = a;
+  let bField = b;
+
+  if (field) {
+    if (!isNil(a[field])) {
+      aField = typeof a[field] === 'string' ? a[field].toUpperCase() : a[field];
+    }
+
+    if (!isNil(b[field])) {
+      bField = typeof b[field] === 'string' ? b[field].toUpperCase() : b[field];
+    }
+  }
+  if (aField < bField) {
+    return -1;
+  }
+  if (aField > bField) {
+    return 1;
+  }
+
+  // names must be equal
+  return 0;
+};
+
+export {iconFromType, metersToFeet, sortByField};
