@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {withRouter} from 'react-router';
 import styled from 'styled-components';
 
@@ -15,16 +14,25 @@ const FlexContainer = styled.div`
 
 const ProfilePic = styled.img`
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+`;
+
+const SettingsButton = styled(IconButton)`
+  padding: 0 !important;
 `;
 
 const Settings = ({logout, router, user}) => {
   return (
     <div>
       <FlexContainer>
-        <ProfilePic src={`${user.photo}`} />
-        <IconMenu iconButtonElement={<IconButton value="arrow_r"><MoreVertIcon /></IconButton>}>
+        <IconMenu
+          iconButtonElement={
+            <SettingsButton>
+              <ProfilePic src={`${user.photo}`} />
+            </SettingsButton>
+          }
+        >
           <MenuItem primaryText="Profile" onClick={() => router.push('/profile')} />
           {user.is_admin && <MenuItem primaryText="Manage Races" onClick={() => router.push('/admin/races')} />}
           <MenuItem primaryText="Sign out" onClick={logout} />
