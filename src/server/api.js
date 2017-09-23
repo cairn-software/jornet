@@ -43,7 +43,7 @@ const authenticate = (req, res) => {
         return upsertUser(json).then(jornetUser => {
           logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
           const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
-          return {...jornetUser, token: jwtToken};
+          return res.json({...jornetUser, token: jwtToken});
         });
       });
     })

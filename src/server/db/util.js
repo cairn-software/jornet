@@ -38,9 +38,10 @@ const buildWhere = search => {
 };
 
 /**
- * Builds the raw string query terms
- * @param {[type]} search [description]
- * @return {[type]} [description]
+ * Builds the raw string to use when querying the db via knex
+ * @param {Object} search The search terms in key:value form
+ * @return {Object} An object with a 'raw' key, that contains the raw search string to use in the database, and a
+ * 'bindings' array, that will contain all of the different search values
  */
 const buildWhereRaw = search => {
   const clauses = buildWhere(search);
