@@ -15,9 +15,15 @@ const create = race => {
   return pg('race').insert(race, allFields).then(races => toJsonTypes(races[0]));
 };
 
-const load = () => {
-  logger.log(`Loading races`);
-  return pg('race').select().then(races => races.map(toJsonTypes));
+const load = search => {
+  logger.log(`Loading races ${search ? JSON.stringify(search) : null}`);
+  return pg('race')
+    .where({
+      type: search.type,
+
+    })
+    .select()
+    .then(races => races.map(toJsonTypes));
 };
 
 const update = (id, race) => {

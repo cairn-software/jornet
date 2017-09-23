@@ -10,21 +10,6 @@ import logger from './logger';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
 const SECRET = fs.readFileSync('private.key');
-
-/**
- * If user does not exist, create user, then create session and return mashup of them all
- * @param {object} stravaUser The strava user to create
- * @param {object} res The express response object
- * @return {object} The newly created user and session token
- */
-const createUserAndToken = stravaUser => {
-  return upsertUser(stravaUser).then(jornetUser => {
-    logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
-    const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
-    return {...jornetUser, token: jwtToken};
-  });
-};
-
 /**
  * Handles authenticating with strava, by exchanging the OAuth code for an access token
  * @param {object} req The express request object
@@ -55,7 +40,11 @@ const authenticate = (req, res) => {
           return null;
         }
 
-        return createUserAndToken(json).then(user => res.json(user));
+        return upsertUser(json).then(jornetUser => {
+          logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
+          const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
+          return {...jornetUser, token: jwtToken};
+        });
       });
     })
     .catch(e => {
@@ -70,13 +59,28 @@ const authenticate = (req, res) => {
     });
 };
 
+/** /races */
+const postRace = (req, res) => {
+  return createRace(req.body).then(race => res.json(race));
+};
+
+const getRaces = (req, res) => {
+  const search = req.query ? req.query : {};
+  return loadRaces(search)
+    .then(races => res.json(races));
+};
+
+const putRace = (req, res) => {
+  return updateRace(req.params.id, req.body).then(race => res.json(race));
+};
+
 /**
  * Ensures that the given request has a valid Bearer token
  * @param {object} req The express request object
  * @param {object} res The express response object
  * @param {Function} next Next function
  */
-const authMiddleware = (req, res, next, isAdminRequired=false) => {
+const authMiddleware = (req, res, next, isAdminRequired = false) => {
   // check if the user is authenticated and, if so, attach user to the request
   const bearer = req.headers.authorization;
   if (isNil(bearer)) {
@@ -109,26 +113,17 @@ const authMiddleware = (req, res, next, isAdminRequired=false) => {
 
 const adminMiddleware = (req, res, next) => authMiddleware(req, res, next, true);
 
-const postRace = (req, res) => {
-  return createRace(req.body)
-    .then(race => res.json(race));
-};
-
-const getRaces = (req, res) => loadRaces().then(races => res.json(races));
-
-const putRace = (req, res) => {
-  return updateRace(req.params.id, req.body)
-    .then(race => res.json(race));
-};
-
 /**
  * Top level function that defines what functions will handle what API requests
  * @param {object} expressApp The express app to add any API definitions to
  */
 const init = expressApp => {
   expressApp.use(bodyParser.json());
-  expressApp.get('/api/races', authMiddleware, getRaces);
+  /* authenticating in via OAuth */
   expressApp.post('/api/oauth', authenticate);
+
+  /* retrieve all races */
+  expressApp.get('/api/races', authMiddleware, getRaces);
 
   // requires admin privileges
   expressApp.post('/api/races', adminMiddleware, postRace);
