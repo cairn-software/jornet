@@ -1,5 +1,6 @@
 import pg from './pg';
 import logger from '../logger';
+import {buildWhereRaw} from './util';
 
 const allFields = ['id', 'name', 'start_date', 'type', 'website', 'distance', 'location', 'latitude', 'longitude'];
 
@@ -15,9 +16,13 @@ const create = race => {
   return pg('race').insert(race, allFields).then(races => toJsonTypes(races[0]));
 };
 
-const load = () => {
-  logger.log(`Loading races`);
-  return pg('race').select().then(races => races.map(toJsonTypes));
+const load = search => {
+  logger.log(`Loading races ${search ? JSON.stringify(search) : null}`);
+  const where = buildWhereRaw(search);
+  return pg('race')
+    .whereRaw(where.raw, where.bindings)
+    .select()
+    .then(races => races.map(toJsonTypes));
 };
 
 const update = (id, race) => {

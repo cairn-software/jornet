@@ -36,7 +36,13 @@ class NavigationBar extends Component {
   render() {
     return (
       <Bar>
-        {this.state.showSearchFilters && <p>Coming soon...</p>}
+        {this.state.showSearchFilters && (
+          <div>
+            <h1>Search by location</h1>
+            <h1>Search by distance</h1>
+            <h1>Search by type</h1>
+          </div>
+        )}
         <SearchButton className="material-icons" onClick={this.showSearchFilters}>
           {' '}
           search{' '}
