@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {buildWhere} from 'server/db/util';
+import {buildWhere, buildWhereRaw} from 'server/db/util';
 
 describe('util', () => {
   it('should support building simple where clauses', () => {
@@ -40,5 +40,20 @@ describe('util', () => {
     const maxTerm = whereClauses.filter(c => c.operator === '<=')[0];
     expect(maxTerm.field).to.equal('distance');
     expect(maxTerm.value).to.equal(search.max_distance);
+  });
+
+  it('should support building raw search clauses', () => {
+    const search = {
+      type: 'Road Run',
+      min_distance: 26.2,
+      max_distance: 50,
+    };
+
+    const whereClauses = buildWhereRaw(search);
+    expect(whereClauses.raw).to.be.a('string');
+    expect(whereClauses.bindings).to.have.length(3);
+
+    console.log(whereClauses.raw);
+    console.log(whereClauses.bindings);
   });
 });

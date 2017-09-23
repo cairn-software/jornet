@@ -67,7 +67,14 @@ const postRace = (req, res) => {
 const getRaces = (req, res) => {
   const search = req.query ? req.query : {};
   return loadRaces(search)
-    .then(races => res.json(races));
+    .then(races => res.json(races))
+    .catch(e => {
+      logger.error(`Failed to search ${e}`);
+      res.status(400);
+      res.json({
+        error: 'Invalid search criteria'
+      });
+    });
 };
 
 const putRace = (req, res) => {
