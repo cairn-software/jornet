@@ -8,7 +8,6 @@ import Mask from 'components/Mask/Mask';
 
 describe('Mask', () => {
   it('should not show the name by default', () => {
-
     const component = mount(
       <MuiThemeProvider>
         <Mask message="Foo" />
