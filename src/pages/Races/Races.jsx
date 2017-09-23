@@ -43,9 +43,7 @@ class Races extends Component {
 
     return (
       <Wrapper>
-        <Map>
-          {RaceMarkers}
-        </Map>
+        <Map>{RaceMarkers}</Map>
         <RaceDrawer
           isOpen={!isNil(this.state.selectedRace)}
           race={isNil(this.state.selectedRace) ? {} : this.state.selectedRace}

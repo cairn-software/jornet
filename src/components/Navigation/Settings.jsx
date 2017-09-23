@@ -8,9 +8,7 @@ import styled from 'styled-components';
 
 import {logoutUser} from 'state/authentication';
 
-const FlexContainer = styled.div`
-  display: flex;
-`;
+const FlexContainer = styled.div`display: flex;`;
 
 const ProfilePic = styled.img`
   border-radius: 50%;
@@ -18,9 +16,7 @@ const ProfilePic = styled.img`
   height: 40px;
 `;
 
-const SettingsButton = styled(IconButton)`
-  padding: 0 !important;
-`;
+const SettingsButton = styled(IconButton)`padding: 0 !important;`;
 
 const Settings = ({logout, router, user}) => {
   return (

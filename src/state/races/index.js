@@ -21,7 +21,10 @@ const reducer = (state = initialState, {payload, type}) => {
       });
     case UPDATE_RACE:
       return Object.assign({}, state, {
-        all: state.all.filter(race => race.id !== payload.id).concat(payload).sort(sortById),
+        all: state.all
+          .filter(race => race.id !== payload.id)
+          .concat(payload)
+          .sort(sortById),
       });
     default:
       return state;

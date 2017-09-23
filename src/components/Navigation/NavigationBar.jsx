@@ -37,7 +37,10 @@ class NavigationBar extends Component {
     return (
       <Bar>
         {this.state.showSearchFilters && <p>Coming soon...</p>}
-        <SearchButton className="material-icons" onClick={this.showSearchFilters}> search </SearchButton>
+        <SearchButton className="material-icons" onClick={this.showSearchFilters}>
+          {' '}
+          search{' '}
+        </SearchButton>
         <Settings />
       </Bar>
     );

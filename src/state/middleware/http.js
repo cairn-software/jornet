@@ -36,17 +36,26 @@ const httpMiddleware = store => next => action => {
   // the object passed into this curried function and then remove
   // any null values
   const createHeaders = pipe(merge(httpCall.headers), reject(isNil));
-  const headers = createHeaders({
-    Authorization: `Bearer ${loadToken()}`,
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'User-Agent': 'cairn',
-  });
+
+  const isExternalApiCall = httpCall.endpoint.startsWith('http');
+
+  // only setup Authorization header if we're making an API call to our own API
+  const headers = isExternalApiCall
+    ? createHeaders({
+        Accept: 'application/json',
+        'User-Agent': 'cairn',
+      })
+    : createHeaders({
+        Authorization: `Bearer ${loadToken()}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'cairn',
+      });
 
   const method = httpCall.method || 'GET';
   const body = httpCall.payload ? JSON.stringify(httpCall.payload) : null;
   const qs = httpCall.query ? '?' + stringify(httpCall.query) : null;
-  const endpoint = `/api${httpCall.endpoint}${qs || ''}`;
+  const endpoint = isExternalApiCall ? `${httpCall.endpoint}${qs || ''}` : `/api${httpCall.endpoint}${qs || ''}`;
 
   if (httpCall.types.length === 1) {
     httpCall.types = [NOTIFICATIONS_MASK, httpCall.types[0], NOTIFICATIONS_ALERT];

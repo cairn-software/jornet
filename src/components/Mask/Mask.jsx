@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {primary, primary1} from 'variables';
 
 const MaskWrapper = styled.div`
-  position: absolute;;
+  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
@@ -21,13 +21,9 @@ const MaskWrapper = styled.div`
   height: 100%;
 `;
 
-const MessageWrapper = styled.div`
-  color: ${primary};
-`;
+const MessageWrapper = styled.div`color: ${primary};`;
 
-const Progress = styled(CircularProgress)`
-  color: ${primary};
-`;
+const Progress = styled(CircularProgress)`color: ${primary};`;
 
 const Mask = ({message}) => {
   return (

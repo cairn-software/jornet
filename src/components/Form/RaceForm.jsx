@@ -19,9 +19,7 @@ const Buttons = styled.div`
   padding: 10px;
 `;
 
-const CancelButton = styled(RaisedButton)`
-  background-color: ${primary};
-`;
+const CancelButton = styled(RaisedButton)`background-color: ${primary};`;
 
 class RaceForm extends Component {
   render() {
