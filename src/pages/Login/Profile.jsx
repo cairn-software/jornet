@@ -8,9 +8,7 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-const Fields = styled.div`
-  padding: 20px;
-`;
+const Fields = styled.div`padding: 20px;`;
 
 const Header = styled.div`
   display: flex;

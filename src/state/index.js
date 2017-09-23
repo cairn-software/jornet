@@ -12,10 +12,12 @@ import httpMiddleware from 'state/middleware/http';
 import {reducer as authentication} from 'state/authentication';
 import {reducer as notifications} from 'state/notifications';
 import {reducer as races} from 'state/races';
+import {reducer as maps} from 'state/maps';
 
 export const rootReducer = combineReducers({
   authentication,
   form,
+  maps,
   notifications,
   races,
   routing,

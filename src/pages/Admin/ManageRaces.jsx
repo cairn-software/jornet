@@ -12,9 +12,7 @@ const ButtonWrapper = styled.div`
   padding: 10px;
 `;
 
-const CreateRaceButton = styled(FontIcon)`
-  cursor: pointer;
-`;
+const CreateRaceButton = styled(FontIcon)`cursor: pointer;`;
 
 class ManageRaces extends Component {
   constructor(props) {
@@ -62,7 +60,10 @@ class ManageRaces extends Component {
           </TableBody>
         </Table>
         <ButtonWrapper>
-          <CreateRaceButton className="material-icons" onClick={() => this.onSelectRow(-1)}> create </CreateRaceButton>
+          <CreateRaceButton className="material-icons" onClick={() => this.onSelectRow(-1)}>
+            {' '}
+            create{' '}
+          </CreateRaceButton>
         </ButtonWrapper>
         <RaceDrawer
           isOpen={!isNil(this.state.selectedRowIndex)}
