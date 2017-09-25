@@ -6,7 +6,9 @@ import IconButton from 'material-ui/IconButton';
 import RaceForm from 'components/Form/RaceForm';
 import {primary, primary3} from 'variables';
 
-const StyledDrawer = styled(Drawer)`z-index: 1000 !important;`;
+const StyledDrawer = styled(Drawer)`
+  z-index: 1000 !important;
+`;
 
 const Heading = styled.h1`
   border-bottom: 1px solid ${primary};
@@ -17,7 +19,7 @@ const RaceHref = styled(FontIcon)`color: ${primary3} !important;`;
 
 const RaceDrawer = ({isOpen, onClose, race}) => {
   return (
-    <StyledDrawer width={400} openSecondary={true} open={isOpen} docked={true}>
+    <StyledDrawer width={500} openSecondary={true} open={isOpen} docked={true}>
       <Heading>
         {race.name}
         <IconButton target="_blank" href={race.website}>

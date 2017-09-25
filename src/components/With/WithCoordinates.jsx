@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {loadCoordinates} from 'state/maps';
+import {isNil} from 'ramda';
 
 /* Denver */
 const DEFAULT_CENTER_COORDINATES = {lat: 39.732, lng: -104.99};
@@ -30,10 +31,11 @@ const WithCoordinates = WrappedComponent => {
   const mapStateToProps = state => {
     const {user} = state.authentication;
     const {coordinates} = state.maps;
+    const address = `${user.city}, ${user.state}, ${user.country}`;
     return {
-      address: `${user.city}, ${user.state}, ${user.country}`,
-      coordinates: coordinates.loaded ? coordinates.geometry.location : DEFAULT_CENTER_COORDINATES,
-      isCoordinatesLoaded: coordinates.loaded,
+      address,
+      coordinates: coordinates[address] ? coordinates[address] : DEFAULT_CENTER_COORDINATES,
+      isCoordinatesLoaded: !isNil(coordinates[address]),
     };
   };
 
