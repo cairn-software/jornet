@@ -95,6 +95,11 @@ const httpMiddleware = store => next => action => {
         return store.dispatch(httpCall.callback);
       }
 
+      // optional callback to directly get the API results in your component
+      if (!isNil(httpCall.onSuccessCallback) && typeof httpCall.onSuccessCallback === 'function') {
+        httpCall.onSuccessCallback(data, store.dispatch);
+      }
+
       return Promise.resolve();
     })
     .catch(error => {

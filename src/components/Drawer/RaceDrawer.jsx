@@ -17,7 +17,7 @@ const RaceHref = styled(FontIcon)`color: ${primary3} !important;`;
 
 const RaceDrawer = ({isOpen, onClose, race}) => {
   return (
-    <StyledDrawer width={400} openSecondary={true} open={isOpen} docked={true}>
+    <StyledDrawer width={500} openSecondary={true} open={isOpen} docked={true}>
       <Heading>
         {race.name}
         <IconButton target="_blank" href={race.website}>
