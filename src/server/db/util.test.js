@@ -52,8 +52,5 @@ describe('util', () => {
     const whereClauses = buildWhereRaw(search);
     expect(whereClauses.raw).to.be.a('string');
     expect(whereClauses.bindings).to.have.length(3);
-
-    console.log(whereClauses.raw);
-    console.log(whereClauses.bindings);
   });
 });
