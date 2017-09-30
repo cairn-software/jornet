@@ -3,18 +3,29 @@ import FontIcon from 'material-ui/FontIcon';
 import styled from 'styled-components';
 import Settings from 'components/Navigation/Settings';
 import {primary} from 'variables';
+import Icon from 'components/Icon/Icon';
 
 const Bar = styled.div`
   background-color: ${primary} !important;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 5px 5px 0 0;
+  height: 50px;
 `;
 
 const SearchButton = styled(FontIcon)`
   cursor: pointer;
-  padding: 15px;
+  padding: 10px;
 `;
+
+const TopLeft = styled.div`
+  display: flex;
+  img {
+    height: 100%;
+    padding-left: 5px;
+  }
+`;
+const TopRight = styled.div`display: flex;`;
 
 /**
  * This example is taking advantage of the composability of the `AppBar`
@@ -36,18 +47,16 @@ class NavigationBar extends Component {
   render() {
     return (
       <Bar>
-        {this.state.showSearchFilters && (
-          <div>
-            <h1>Search by location</h1>
-            <h1>Search by distance</h1>
-            <h1>Search by type</h1>
-          </div>
-        )}
-        <SearchButton className="material-icons" onClick={this.showSearchFilters}>
-          {' '}
-          search{' '}
-        </SearchButton>
-        <Settings />
+        <TopLeft>
+          <Icon href="/" img="cairn.svg" />
+        </TopLeft>
+        <TopRight>
+          <SearchButton className="material-icons" onClick={this.showSearchFilters}>
+            {' '}
+            search{' '}
+          </SearchButton>
+          <Settings />
+        </TopRight>
       </Bar>
     );
   }
