@@ -23,7 +23,8 @@ describe('Map', () => {
       maps: {
         coordinates: {
           ['Denver, CO, United States']: {
-            location: {lat: 39.732, lng: -104.99},
+            lat: 39.732,
+            lng: -104.99,
           },
         },
       },

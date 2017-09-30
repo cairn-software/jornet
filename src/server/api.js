@@ -5,7 +5,7 @@ import fs from 'fs';
 import {isNil} from 'ramda';
 
 import {upsert as upsertUser} from './db/user';
-import {create as createRace, load as loadRaces, update as updateRace} from './db/race';
+import {create as createRace, load as loadRaces, update as updateRace, deleteRace as removeRace} from './db/race';
 import logger from './logger';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
@@ -61,7 +61,14 @@ const authenticate = (req, res) => {
 
 /** /races */
 const postRace = (req, res) => {
-  return createRace(req.body).then(race => res.json(race));
+  return createRace(req.body)
+    .then(race => res.json(race))
+    .catch(e => {
+      logger.error(`$Failed to create race: ${e}`);
+      const msg = e.column ? `${e.column} is required` : 'Failed to create race';
+      res.status(400);
+      res.json({error: msg});
+    });
 };
 
 const getRaces = (req, res) => {
@@ -72,13 +79,33 @@ const getRaces = (req, res) => {
       logger.error(`Failed to search ${e}`);
       res.status(400);
       res.json({
-        error: 'Invalid search criteria'
+        error: 'Invalid search criteria',
       });
     });
 };
 
 const putRace = (req, res) => {
-  return updateRace(req.params.id, req.body).then(race => res.json(race));
+  return updateRace(req.params.id, req.body)
+    .then(race => res.json(race))
+    .catch(e => {
+      logger.error(`Failed to update race: ${e}`);
+      const msg = e.column ? `${e.column} is required` : 'Failed to update race';
+      res.status(400);
+      res.json({error: msg});
+    });
+};
+
+const deleteRace = (req, res) => {
+  return removeRace(req.params.id)
+    .then(() => {
+      res.status(204);
+      res.end();
+    })
+    .catch(e => {
+      logger.error(`Failed to delete race: ${e}`);
+      res.status(400);
+      res.json({error: 'Failed to delete race'});
+    });
 };
 
 /**
@@ -134,7 +161,8 @@ const init = expressApp => {
 
   // requires admin privileges
   expressApp.post('/api/races', adminMiddleware, postRace);
-  expressApp.put('/api/races/:id', adminMiddleware, putRace);
+  expressApp.patch('/api/races/:id', adminMiddleware, putRace);
+  expressApp.delete('/api/races/:id', adminMiddleware, deleteRace);
 };
 
 export default init;
