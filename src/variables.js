@@ -8,3 +8,5 @@ export const primary3 = '#359F7F';
 export const primary4 = '#4CD4AB';
 
 export const lightGray = '#EDEDED';
+
+export const blueColor = '#0f97b5';

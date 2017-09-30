@@ -4,6 +4,7 @@ import {isNil} from 'ramda';
 import {routerActions} from 'react-router-redux';
 import styled from 'styled-components';
 
+import Icon from 'components/Icon/Icon';
 import {primary} from 'variables';
 import {oauthLogin} from 'state/authentication';
 import properties from 'properties';
@@ -36,6 +37,14 @@ const StravaButton = styled.img`
   padding-top: 20px;
 `;
 
+// ew 🙈
+const SubHeading = styled.div`
+  img {
+    height: 20px;
+    margin: 0 5px -3px 0;
+  }
+`;
+
 class Login extends Component {
   componentWillMount() {
     const {authenticated, location, login, replace, redirect} = this.props;
@@ -65,7 +74,10 @@ class Login extends Component {
         <Body>
           <div>
             <Heading>Cairn</Heading>
-            <i>Suffer smarter.</i>
+            <SubHeading>
+              <Icon img="cairn.svg" />
+              <i>Suffer smarter.</i>
+            </SubHeading>
           </div>
           <StravaButton src="/assets/img/strava-connect-orange.svg" onClick={onConnect} />
         </Body>
