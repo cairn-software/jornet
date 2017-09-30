@@ -42,7 +42,7 @@ const createRace = race => ({
 
 const updateRace = (id, race) => ({
   [CALL_API]: {
-    method: 'PUT',
+    method: 'PATCH',
     endpoint: `/races/${id}`,
     types: [UPDATE_RACE],
     payload: race,
