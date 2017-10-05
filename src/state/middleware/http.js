@@ -75,6 +75,7 @@ const httpMiddleware = store => next => action => {
     .then(response => {
       return parseJSON(response).then(data => {
         if (!response.ok) {
+          store.dispatch(createActionOfUnkownType(failureType, {payload: {message: data.error, type: 'error'}}));
           if (response.status === 401) {
             store.dispatch({type: LOGIN_EXPIRED, payload: {message: 'Session expired...'}});
           }
@@ -86,6 +87,12 @@ const httpMiddleware = store => next => action => {
     .then(data => {
       if (!isNil(data.error)) Promise.reject(data.error);
       store.dispatch(createActionOfUnkownType(successType, {payload: data, metadata: httpCall.metadata}));
+
+      if (!isNil(httpCall.onSuccessAlert)) {
+        store.dispatch(
+          createActionOfUnkownType(NOTIFICATIONS_ALERT, {payload: {message: httpCall.onSuccessAlert, type: 'success'}}),
+        );
+      }
 
       if (isMaskRequest) {
         store.dispatch({type: NOTIFICATIONS_MASK_REMOVE, payload: null});
@@ -107,7 +114,7 @@ const httpMiddleware = store => next => action => {
         store.dispatch({type: NOTIFICATIONS_MASK, payload: null});
       }
 
-      store.dispatch(createActionOfUnkownType(failureType, {payload: error, error: true}));
+      store.dispatch(createActionOfUnkownType(failureType, {...error, type: 'error'}));
 
       // throw error in non-production environments to help debug
       if (process.env.NODE_ENV === 'production') {

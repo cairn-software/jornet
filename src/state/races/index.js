@@ -37,6 +37,7 @@ const createRace = race => ({
     endpoint: '/races',
     types: [CREATE_RACE],
     payload: race,
+    onSuccessAlert: `Successfully created race`,
   },
 });
 
@@ -46,6 +47,7 @@ const updateRace = (id, race) => ({
     endpoint: `/races/${id}`,
     types: [UPDATE_RACE],
     payload: race,
+    onSuccessAlert: `Successfully updated race`,
   },
 });
 
