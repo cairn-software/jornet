@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 
 import {reducer} from 'state/notifications';
-import {NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
+import {NOTIFICATIONS_ALERT, NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
 
 describe('notifications', () => {
   context('reducer', () => {
@@ -16,6 +16,14 @@ describe('notifications', () => {
       const nextState2 = reducer(nextState, action2);
 
       expect(nextState2.mask).to.be.null;
+    });
+
+    it('should support NOTIFICATIONS_ALERT', () => {
+      const initialState = null;
+      const action = {type: NOTIFICATIONS_ALERT, payload: {message: 'Race created'}};
+      const nextState = reducer(initialState, action);
+
+      expect(nextState.alert).to.deep.equal(action.payload);
     });
   });
 });
