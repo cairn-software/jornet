@@ -1,16 +1,20 @@
 import React, {Component, PropTypes} from 'react';
+import IconButton from 'material-ui/IconButton';
 import {connect} from 'react-redux';
 import {formValueSelector, reduxForm, Field} from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
+import ConfirmButton from 'components/Button/ConfirmButton';
 import styled from 'styled-components';
 import {isEmpty, isNil} from 'ramda';
-import {createRace, updateRace} from 'state/races';
-import {primary, primary2} from 'variables';
+import {createRace, deleteRace, updateRace} from 'state/races';
+import {primary, primary2, primary3} from 'variables';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import DatePicker from 'components/Input/DatePicker';
 import {SelectField, TextField} from 'redux-form-material-ui';
 import {loadCoordinates} from 'state/maps';
+
+const RaceHref = styled(FontIcon)`color: ${primary3} !important;`;
 
 const Form = styled.form`
   width: 100%;
@@ -32,9 +36,20 @@ const CancelButton = styled(RaisedButton)`background-color: ${primary};`;
 
 class RaceForm extends Component {
   render() {
-    const {coordinates, change, create, generate, handleSubmit, raceLocation, onCancel, update} = this.props;
+    const {
+      coordinates,
+      change,
+      create,
+      remove,
+      generate,
+      handleSubmit,
+      initialValues,
+      raceLocation,
+      onClose,
+      update,
+    } = this.props;
 
-    const onSubmit = values => (values.id ? update(values.id, values) : create(values));
+    const onSubmit = values => (values.id ? update(values.id, values, onClose) : create(values, onClose));
 
     const required = value => (isEmpty(value) ? 'Required' : undefined);
 
@@ -46,7 +61,7 @@ class RaceForm extends Component {
     // will check if we already have the coordinates for the given address, and if not, will go out to try to find em
     const generateCoordinates = () =>
       !isNil(coordinates[raceLocation])
-        ? setLatLng(coordinates)
+        ? setLatLng(coordinates[raceLocation])
         : generate(raceLocation, r => setLatLng(r.results[0].geometry.location));
 
     return (
@@ -65,6 +80,11 @@ class RaceForm extends Component {
         <FieldGroup>
           <Field component={TextField} name="distance" floatingLabelText="Distance" />
           <Field component={TextField} name="website" floatingLabelText="Website" />
+          {initialValues.website && (
+            <IconButton target="_blank" href={initialValues.website}>
+              <RaceHref className="material-icons"> open_in_new </RaceHref>
+            </IconButton>
+          )}
         </FieldGroup>
         <FieldGroup>
           <Field component={TextField} name="latitude" floatingLabelText="Latitude" />
@@ -79,7 +99,8 @@ class RaceForm extends Component {
             />
           </div>
           <div>
-            <CancelButton label="Cancel" backgroundColor={primary} onClick={onCancel} />
+            <CancelButton label="Cancel" backgroundColor={primary} onClick={onClose} />
+            {initialValues.id && <ConfirmButton label="Delete" onClick={() => remove(initialValues.id, onClose)} />}
             <RaisedButton label="Submit" type="submit" />
           </div>
         </Buttons>
@@ -91,12 +112,13 @@ RaceForm.propTypes = {
   change: PropTypes.func.isRequired,
   coordinates: PropTypes.object.isRequired,
   create: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
   generate: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   raceLocation: PropTypes.string,
   initialValues: PropTypes.object,
-  onCancel: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
 };
 RaceForm.defaultProps = {
@@ -111,8 +133,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  create: race => dispatch(createRace(race)),
-  update: (id, race) => dispatch(updateRace(id, race)),
+  create: (race, cb) => dispatch(createRace(race, cb)),
+  update: (id, race, cb) => dispatch(updateRace(id, race, cb)),
+  remove: (id, cb) => dispatch(deleteRace(id, cb)),
   generate: (address, cb) => dispatch(loadCoordinates(address, cb)),
 });
 
