@@ -22,6 +22,13 @@ const WithCoordinates = WrappedComponent => {
       }
     }
 
+    componentWillReceiveProps(nextProps) {
+      const {address, load} = this.props;
+      if (nextProps.address !== address && !nextProps.isCoordinatesLoaded) {
+        load(nextProps.address);
+      }
+    }
+
     render() {
       const {isCoordinatesLoaded, coordinates} = this.props;
       return isCoordinatesLoaded ? <WrappedComponent {...this.props} coordinates={coordinates} /> : null;
@@ -31,7 +38,7 @@ const WithCoordinates = WrappedComponent => {
   const mapStateToProps = state => {
     const {user} = state.authentication;
     const {coordinates} = state.maps;
-    const address = `${user.city}, ${user.state}, ${user.country}`;
+    const address = state.maps.address || `${user.city}, ${user.state}, ${user.country}`;
     return {
       address,
       coordinates: coordinates[address] ? coordinates[address] : DEFAULT_CENTER_COORDINATES,
