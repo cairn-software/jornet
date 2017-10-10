@@ -2,6 +2,7 @@ import {CALL_API} from 'state/types';
 import properties from 'properties';
 
 /* Constants */
+export const MAP_CENTER_ADDRESS_CHANGE = 'GOOGLE_MAPS:MAP_CENTER_ADDRESS_CHANGE';
 export const LOAD_ADDRESS_COORDINATES = 'GOOGLE_MAPS:LOAD_ADDRESS_COORDINATES';
 
 /* Actions */
@@ -15,6 +16,11 @@ const loadCoordinates = (address, onSuccessCallback) => ({
     metadata: {address},
     onSuccessCallback,
   },
+});
+
+const centerMapOnAddress = address => ({
+  type: MAP_CENTER_ADDRESS_CHANGE,
+  payload: address,
 });
 
 /* Reducer */
@@ -33,9 +39,11 @@ const reducer = (state = initialState, {type, payload, metadata}) => {
           [metadata.address]: geometry.location,
         },
       });
+    case MAP_CENTER_ADDRESS_CHANGE:
+      return Object.assign({}, state, {address: payload});
     default:
       return state;
   }
 };
 
-export {reducer, loadCoordinates};
+export {reducer, centerMapOnAddress, loadCoordinates};

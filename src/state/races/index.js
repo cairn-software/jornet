@@ -69,11 +69,12 @@ const deleteRace = (id, onSuccessCallback) => ({
   },
 });
 
-const loadRaces = () => ({
+const loadRaces = query => ({
   [CALL_API]: {
     method: 'GET',
     endpoint: '/races',
     types: [LOAD_RACES],
+    query,
   },
 });
 

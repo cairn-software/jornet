@@ -29,7 +29,7 @@ class Map extends Component {
           key: properties.googleMapsKey,
           language: 'en',
         }}
-        defaultCenter={coordinates}
+        center={coordinates}
         defaultZoom={zoom}
         hoverDistance={40 / 2}
         options={mapOptions}

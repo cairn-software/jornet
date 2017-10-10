@@ -13,6 +13,7 @@ import {reducer as authentication} from 'state/authentication';
 import {reducer as notifications} from 'state/notifications';
 import {reducer as races} from 'state/races';
 import {reducer as maps} from 'state/maps';
+import {reducer as search} from 'state/search';
 
 export const rootReducer = combineReducers({
   authentication,
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
   notifications,
   races,
   routing,
+  search,
 });
 
 /**
