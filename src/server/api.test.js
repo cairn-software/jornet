@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import fs from 'fs';
+import request from 'request';
+
 import jwt from 'jsonwebtoken';
 import chai, {expect} from 'chai';
 chai.use(require('chai-json-schema'));
@@ -47,7 +49,7 @@ const RACE_SCHEMA = {
 };
 
 describe('api', () => {
-  const request = (method, url, body, token = DEFAULT_TOKEN) => {
+  const httpRequest = (method, url, body, token = DEFAULT_TOKEN) => {
     const config = {
       method: method,
       json: true,
@@ -65,13 +67,13 @@ describe('api', () => {
   it('should expire a JWT token', () => {
     const jornetUser = {id: 1, strava_id: 1, email_address: 'frank.ricard@oldschool.com', is_admin: false};
     const token = jwt.sign({jornetUser}, SECRET, {expiresIn: 0});
-    return request('get', '/races', null, token).then(r => {
+    return httpRequest('get', '/races', null, token).then(r => {
       expect(r.status).to.equal(401);
     });
   });
 
   it('should support retrieving all races', () => {
-    return request('get', '/races')
+    return httpRequest('get', '/races')
       .then(r => r.json())
       .then(races => {
         expect(races).to.have.length.above(0);
@@ -80,7 +82,7 @@ describe('api', () => {
   });
 
   it('should not allowing creating or updating a race if user is not an admin', () => {
-    return request('post', '/races').then(r => {
+    return httpRequest('post', '/races').then(r => {
       expect(r.status).to.equal(403);
     });
   });
@@ -99,21 +101,21 @@ describe('api', () => {
       distance: 50,
     };
     const updateBody = Object.assign({}, {name: 'TestRace-Update'});
-    return request('post', '/races', body, token)
+    return httpRequest('post', '/races', body, token)
       .then(r => r.json())
       .then(race => {
         expect(race).to.be.jsonSchema(RACE_SCHEMA);
         expect(race.name).to.equal(body.name);
         return race;
       })
-      .then(race => request('patch', `/races/${race.id}`, updateBody, token))
+      .then(race => httpRequest('patch', `/races/${race.id}`, updateBody, token))
       .then(r => r.json())
       .then(race => {
         expect(race).to.be.jsonSchema(RACE_SCHEMA);
         expect(race.name).to.equal(updateBody.name);
         return race;
       })
-      .then(race => request('delete', `/races/${race.id}`, null, token))
+      .then(race => httpRequest('delete', `/races/${race.id}`, null, token))
       .then(r => {
         expect(r.status).to.equal(204);
       });
@@ -131,7 +133,7 @@ describe('api', () => {
       longitude: 10,
       distance: 50,
     };
-    return request('post', '/races', body, token)
+    return httpRequest('post', '/races', body, token)
       .then(r => {
         expect(r.status).to.equal(400);
         return r.json();
@@ -139,5 +141,29 @@ describe('api', () => {
       .then(errorResponse => {
         expect(errorResponse.error).to.contain('type');
       });
+  });
+
+  it('should allow bulk upload races via a file', done => {
+    const jornetUser = {id: 2, strava_id: 2, email_address: 'joseph.pulaski@oldschool.com', is_admin: true};
+    const token = jwt.sign({jornetUser}, SECRET, {expiresIn: SIXTY_SECONDS});
+    const formData = {
+      file: fs.createReadStream(__dirname + '/../test/races.csv'),
+    };
+    const config = {
+      url: `${BASE_URL}/bulk/races`,
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+        'User-Agent': 'jornet/test',
+      },
+      formData,
+    };
+
+    return request.post(config, err => {
+      expect(err).to.be.null;
+      done();
+    });
   });
 });

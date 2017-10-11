@@ -3,6 +3,16 @@ import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import {isNil} from 'ramda';
+import csv from 'fast-csv';
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: './uploads',
+  filename(req, file, cb) {
+    cb(null, `${new Date()}-${file.originalname}`);
+  },
+});
+const upload = multer({storage});
 
 import {upsert as upsertUser} from './db/user';
 import {create as createRace, load as loadRaces, update as updateRace, deleteRace as removeRace} from './db/race';
@@ -108,6 +118,23 @@ const deleteRace = (req, res) => {
     });
 };
 
+const bulkPostRaces = (req, res) => {
+  const stream = fs.createReadStream(req.file.path);
+  csv
+    .fromStream(stream, {headers: true})
+    .on('data', race => {
+      console.log(race);
+      // TODO - JJW
+      // 1. check if race exists by comparing names
+      // 2. load lat/lng from google maps based on given location
+      // 3. upsert race by name
+    })
+    .on('end', () => {
+      fs.unlinkSync(req.file.path);
+      res.status(200).end();
+    });
+};
+
 /**
  * Ensures that the given request has a valid Bearer token
  * @param {object} req The express request object
@@ -161,6 +188,7 @@ const init = expressApp => {
 
   // requires admin privileges
   expressApp.post('/api/races', adminMiddleware, postRace);
+  expressApp.post('/api/bulk/races', upload.single('file'), bulkPostRaces);
   expressApp.patch('/api/races/:id', adminMiddleware, putRace);
   expressApp.delete('/api/races/:id', adminMiddleware, deleteRace);
 };
