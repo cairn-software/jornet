@@ -52,8 +52,17 @@ const authenticate = (req, res) => {
 
         return upsertUser(json).then(jornetUser => {
           logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
-          const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
-          return res.json({...jornetUser, token: jwtToken});
+          const jwtToken = jwt.sign(
+            {
+              jornetUser,
+            },
+            SECRET,
+            {expiresIn: SEVEN_DAYS_IN_SECONDS},
+          );
+          return res.json({
+            ...jornetUser,
+            token: jwtToken,
+          });
         });
       });
     })
@@ -88,9 +97,7 @@ const getRaces = (req, res) => {
     .catch(e => {
       logger.error(`Failed to search ${e}`);
       res.status(400);
-      res.json({
-        error: 'Invalid search criteria',
-      });
+      res.json({error: 'Invalid search criteria'});
     });
 };
 
@@ -118,19 +125,62 @@ const deleteRace = (req, res) => {
     });
 };
 
+const withLatLng = race => {
+  const config = {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'jornet',
+    },
+  };
+
+  return fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${race.location}&key=${process.env
+      .JORNET_GOOGLE_MAPS_KEY}`,
+    config,
+  ).then(response => {
+    return response.json().then(json => {
+      if (json.error_message) {
+        logger.log(`Failed to load lat/lng: ${race.error_message}`);
+        return Object.assign({}, race);
+      }
+      const geometry = json.results ? json.results[0].geometry : {};
+      // console.log(JSON.stringify(geometry));
+      return Object.assign({}, race, {
+        latitude: geometry.location.lat,
+        longitude: geometry.location.lng,
+      });
+    });
+  });
+};
+
 const bulkPostRaces = (req, res) => {
   const stream = fs.createReadStream(req.file.path);
+  let uploadedCount = 0;
   csv
     .fromStream(stream, {headers: true})
     .on('data', race => {
-      console.log(race);
-      // TODO - JJW
-      // 1. check if race exists by comparing names
-      // 2. load lat/lng from google maps based on given location
-      // 3. upsert race by name
+      console.log(`Checking to see if there is a race with name: ${race.name} and distance: ${race.distance}`);
+      return loadRaces({name: race.name, distance: race.distance}).then(races => {
+        if (races.length > 0) {
+          logger.log(`Not inserting ${race.name} as it already exists.`);
+          return null;
+        }
+        logger.log(`Creating race with name: ${race.name}`);
+        return withLatLng(race).then(hydratedRace => {
+          if (!hydratedRace.latitude || !hydratedRace.longitude) {
+            logger.log(`Could not find lat/lng for ${race.name}, not creating.`);
+            return null;
+          }
+          uploadedCount++;
+          return createRace(hydratedRace);
+        });
+      });
     })
     .on('end', () => {
       fs.unlinkSync(req.file.path);
+      res.header('X-Cairn-Bulk-Results', `${uploadedCount}`);
       res.status(200).end();
     });
 };
