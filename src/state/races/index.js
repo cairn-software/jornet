@@ -1,6 +1,9 @@
 import {CALL_API} from 'state/types';
 import {sortByField} from 'util/tools';
+import {loadToken} from 'util/storage';
 
+export const BULK_UPLOAD_RACES = 'RACES:BULK_UPLOAD_RACES';
+export const BULK_UPLOAD_RACES_FAILED = 'RACES:BULK_UPLOAD_RACES_FAILED';
 export const CREATE_RACE = 'RACES:CREATE_RACE';
 export const DELETE_RACE = 'RACES:DELETE_RACE';
 export const LOAD_RACES = 'RACES:LOAD_RACES';
@@ -30,6 +33,18 @@ const reducer = (state = initialState, {metadata, payload, type}) => {
           .filter(race => race.id !== payload.id)
           .concat(payload)
           .sort(sortById),
+      });
+    case BULK_UPLOAD_RACES:
+      return Object.assign({}, state, {
+        bulk: {
+          success: true,
+        },
+      });
+    case BULK_UPLOAD_RACES_FAILED:
+      return Object.assign({}, state, {
+        bulk: {
+          error: payload,
+        },
       });
     default:
       return state;
@@ -78,4 +93,17 @@ const loadRaces = query => ({
   },
 });
 
-export {reducer, createRace, deleteRace, loadRaces, updateRace};
+const bulkUploadRaces = file => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('name', file.name);
+  const headers = {Authorization: `Bearer ${loadToken()}`, 'User-Agent': 'cairn'};
+  return dispatch => {
+    return fetch('/api/bulk/races', {method: 'POST', headers, body: formData})
+      .then(() => dispatch({type: BULK_UPLOAD_RACES}))
+      .then(() => setTimeout(() => dispatch(loadRaces()), 1000)) // wait a second to load them... 🙈
+      .catch(e => dispatch({type: BULK_UPLOAD_RACES_FAILED, payload: e}));
+  };
+};
+
+export {reducer, bulkUploadRaces, createRace, deleteRace, loadRaces, updateRace};

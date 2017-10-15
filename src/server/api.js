@@ -3,6 +3,16 @@ import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import {isNil} from 'ramda';
+import csv from 'fast-csv';
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: './uploads',
+  filename(req, file, cb) {
+    cb(null, `${new Date()}-${file.originalname}`);
+  },
+});
+const upload = multer({storage});
 
 import {upsert as upsertUser} from './db/user';
 import {create as createRace, load as loadRaces, update as updateRace, deleteRace as removeRace} from './db/race';
@@ -42,8 +52,17 @@ const authenticate = (req, res) => {
 
         return upsertUser(json).then(jornetUser => {
           logger.log(`Creating JWT token for jornet user: ${jornetUser.id}`);
-          const jwtToken = jwt.sign({jornetUser}, SECRET, {expiresIn: SEVEN_DAYS_IN_SECONDS});
-          return res.json({...jornetUser, token: jwtToken});
+          const jwtToken = jwt.sign(
+            {
+              jornetUser,
+            },
+            SECRET,
+            {expiresIn: SEVEN_DAYS_IN_SECONDS},
+          );
+          return res.json({
+            ...jornetUser,
+            token: jwtToken,
+          });
         });
       });
     })
@@ -78,9 +97,7 @@ const getRaces = (req, res) => {
     .catch(e => {
       logger.error(`Failed to search ${e}`);
       res.status(400);
-      res.json({
-        error: 'Invalid search criteria',
-      });
+      res.json({error: 'Invalid search criteria'});
     });
 };
 
@@ -105,6 +122,65 @@ const deleteRace = (req, res) => {
       logger.error(`Failed to delete race: ${e}`);
       res.status(400);
       res.json({error: 'Failed to delete race'});
+    });
+};
+
+const withLatLng = race => {
+  const config = {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'jornet',
+    },
+  };
+
+  return fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${race.location}&key=${process.env
+      .JORNET_GOOGLE_MAPS_KEY}`,
+    config,
+  ).then(response => {
+    return response.json().then(json => {
+      if (json.error_message) {
+        logger.log(`Failed to load lat/lng: ${race.error_message}`);
+        return Object.assign({}, race);
+      }
+      const geometry = json.results ? json.results[0].geometry : {};
+      return Object.assign({}, race, {
+        latitude: geometry.location.lat,
+        longitude: geometry.location.lng,
+      });
+    });
+  });
+};
+
+const bulkPostRaces = (req, res) => {
+  const stream = fs.createReadStream(req.file.path);
+  let uploadedCount = 0;
+  csv
+    .fromStream(stream, {headers: true})
+    .on('data', race => {
+      console.log(`Checking to see if there is a race with name: ${race.name} and distance: ${race.distance}`);
+      return loadRaces({name: race.name, distance: race.distance}).then(races => {
+        if (races.length > 0) {
+          logger.log(`Not inserting ${race.name} as it already exists.`);
+          return null;
+        }
+        logger.log(`Creating race with name: ${race.name}`);
+        return withLatLng(race).then(hydratedRace => {
+          if (!hydratedRace.latitude || !hydratedRace.longitude) {
+            logger.log(`Could not find lat/lng for ${race.name}, not creating.`);
+            return null;
+          }
+          uploadedCount++;
+          return createRace(hydratedRace);
+        });
+      });
+    })
+    .on('end', () => {
+      fs.unlinkSync(req.file.path);
+      res.header('X-Cairn-Bulk-Results', `${uploadedCount}`);
+      res.status(200).end();
     });
 };
 
@@ -152,7 +228,9 @@ const adminMiddleware = (req, res, next) => authMiddleware(req, res, next, true)
  * @param {object} expressApp The express app to add any API definitions to
  */
 const init = expressApp => {
+  expressApp.disable('x-powered-by');
   expressApp.use(bodyParser.json());
+
   /* authenticating in via OAuth */
   expressApp.post('/api/oauth', authenticate);
 
@@ -161,6 +239,7 @@ const init = expressApp => {
 
   // requires admin privileges
   expressApp.post('/api/races', adminMiddleware, postRace);
+  expressApp.post('/api/bulk/races', [adminMiddleware, upload.single('file')], bulkPostRaces);
   expressApp.patch('/api/races/:id', adminMiddleware, putRace);
   expressApp.delete('/api/races/:id', adminMiddleware, deleteRace);
 };
