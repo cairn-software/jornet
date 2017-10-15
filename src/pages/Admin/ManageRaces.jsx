@@ -43,7 +43,6 @@ class ManageRaces extends Component {
 
   render() {
     const {bulkResults, races} = this.props;
-    console.log(bulkResults);
 
     return (
       <Wrapper>

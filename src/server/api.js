@@ -146,7 +146,6 @@ const withLatLng = race => {
         return Object.assign({}, race);
       }
       const geometry = json.results ? json.results[0].geometry : {};
-      // console.log(JSON.stringify(geometry));
       return Object.assign({}, race, {
         latitude: geometry.location.lat,
         longitude: geometry.location.lng,
@@ -240,7 +239,7 @@ const init = expressApp => {
 
   // requires admin privileges
   expressApp.post('/api/races', adminMiddleware, postRace);
-  expressApp.post('/api/bulk/races', upload.single('file'), bulkPostRaces);
+  expressApp.post('/api/bulk/races', [adminMiddleware, upload.single('file')], bulkPostRaces);
   expressApp.patch('/api/races/:id', adminMiddleware, putRace);
   expressApp.delete('/api/races/:id', adminMiddleware, deleteRace);
 };

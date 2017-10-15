@@ -1,5 +1,6 @@
 import {CALL_API} from 'state/types';
 import {sortByField} from 'util/tools';
+import {loadToken} from 'util/storage';
 
 export const BULK_UPLOAD_RACES = 'RACES:BULK_UPLOAD_RACES';
 export const BULK_UPLOAD_RACES_FAILED = 'RACES:BULK_UPLOAD_RACES_FAILED';
@@ -96,8 +97,9 @@ const bulkUploadRaces = file => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('name', file.name);
+  const headers = {Authorization: `Bearer ${loadToken()}`, 'User-Agent': 'cairn'};
   return dispatch => {
-    return fetch('/api/bulk/races', {method: 'POST', body: formData})
+    return fetch('/api/bulk/races', {method: 'POST', headers, body: formData})
       .then(() => dispatch({type: BULK_UPLOAD_RACES}))
       .then(() => setTimeout(() => dispatch(loadRaces()), 1000)) // wait a second to load them... 🙈
       .catch(e => dispatch({type: BULK_UPLOAD_RACES_FAILED, payload: e}));
