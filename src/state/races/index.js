@@ -99,6 +99,7 @@ const bulkUploadRaces = file => {
   return dispatch => {
     return fetch('/api/bulk/races', {method: 'POST', body: formData})
       .then(() => dispatch({type: BULK_UPLOAD_RACES}))
+      .then(() => setTimeout(() => dispatch(loadRaces()), 1000)) // wait a second to load them... 🙈
       .catch(e => dispatch({type: BULK_UPLOAD_RACES_FAILED, payload: e}));
   };
 };

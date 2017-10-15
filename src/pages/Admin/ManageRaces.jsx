@@ -18,12 +18,6 @@ const CreateRaceButton = styled(FontIcon)`cursor: pointer;`;
 
 const Wrapper = styled.div`overflow: auto;`;
 
-const Success = styled(FontIcon)`
-  background-color: green;
-  padding: 0;
-  margin: 0;
-`;
-
 const Failure = styled.p`color: red;`;
 
 class ManageRaces extends Component {
@@ -55,7 +49,6 @@ class ManageRaces extends Component {
       <Wrapper>
         <ButtonWrapper>
           <input type="file" placeholder="CSV File of Races" onChange={this.handleFileUpload} />
-          {bulkResults && bulkResults.success && <Success className="material-icons">white_check_mark</Success>}
           {bulkResults && bulkResults.error && <Failure>Failed to upload CSV: {bulkResults.error}</Failure>}
           <CreateRaceButton className="material-icons" onClick={() => this.onSelectRow(-1)}>
             {' '}
