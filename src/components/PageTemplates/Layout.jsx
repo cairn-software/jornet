@@ -68,11 +68,13 @@ const App = styled.div`
   height: 100vh;
   overflow-x: hidden;
   overflow-y: hidden;
+  overflow: auto;
 `;
 
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
+  overflow: auto;
 `;
 
 const Alerts = styled(Snackbar)`

@@ -229,7 +229,9 @@ const adminMiddleware = (req, res, next) => authMiddleware(req, res, next, true)
  * @param {object} expressApp The express app to add any API definitions to
  */
 const init = expressApp => {
+  expressApp.disable('x-powered-by');
   expressApp.use(bodyParser.json());
+
   /* authenticating in via OAuth */
   expressApp.post('/api/oauth', authenticate);
 
